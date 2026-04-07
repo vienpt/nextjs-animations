@@ -98,7 +98,9 @@ function AccordionItem({
           opacity: 0,
           duration: 0.35,
           ease: "power2.in",
-          onComplete: () => gsap.set(panel, { display: "none" }),
+          onComplete: () => {
+            if (panel) gsap.set(panel, { display: "none" });
+          },
         });
         gsap.to(icon, { rotation: 0, duration: 0.3 });
       }
