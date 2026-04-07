@@ -1,7 +1,7 @@
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,9 +17,9 @@ interface CountUpOptions {
   triggerStart?: string;
 }
 
-export function useCountUp<T extends HTMLElement = HTMLSpanElement>(
+export default function useCountUp<T extends HTMLElement = HTMLSpanElement>(
   options: CountUpOptions,
-  deps: React.DependencyList = []
+  deps: React.DependencyList = [],
 ) {
   const elRef = useRef<T>(null);
   const {
@@ -27,10 +27,10 @@ export function useCountUp<T extends HTMLElement = HTMLSpanElement>(
     to,
     duration = 1.8,
     decimals = 0,
-    suffix = '',
-    prefix = '',
-    ease = 'power2.out',
-    triggerStart = 'top 80%',
+    suffix = "",
+    prefix = "",
+    ease = "power2.out",
+    triggerStart = "top 80%",
   } = options;
 
   useGSAP(
@@ -49,14 +49,15 @@ export function useCountUp<T extends HTMLElement = HTMLSpanElement>(
             ease,
             onUpdate: () => {
               if (elRef.current) {
-                elRef.current.textContent = prefix + obj.val.toFixed(decimals) + suffix;
+                elRef.current.textContent =
+                  prefix + obj.val.toFixed(decimals) + suffix;
               }
             },
           });
         },
       });
     },
-    { dependencies: [to, ...deps], revertOnUpdate: true }
+    { dependencies: [to, ...deps], revertOnUpdate: true },
   );
 
   return elRef;

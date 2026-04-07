@@ -1,9 +1,9 @@
-import CinematicCover from "./components/CinematicCover";
-import GridContentSection from "./components/GridContentSection";
-import ParallaxCover from "./components/ParallaxCover";
-import HorizontalGallery from "./components/HorizontalGallery";
+import CinematicCover from "@/components/sub-poc/CinematicCover";
+import GridContentSection from "@/components/sub-poc/GridContentSection";
+import ParallaxCover from "@/components/sub-poc/ParallaxCover";
+import HorizontalGallery from "@/components/sub-poc/HorizontalGallery";
 import LenisProvider from "@/hocs/LenisProvider";
-import HeroSection from "./components/HeroVideoSection";
+import HeroSection from "@/components/sub-poc/HeroVideoSection";
 
 export default function SubPocPage() {
   return (

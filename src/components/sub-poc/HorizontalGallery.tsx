@@ -7,7 +7,7 @@ import GridContentSection from "./GridContentSection";
 const IMAGE_SIZE = 512;
 const IMAGE_PADDING = 32;
 
-const HorizontalGallery = ({ items }: { items: string[] }) => {
+const HorizontalGallery = ({ items = [] }: { items?: string[] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -16,6 +16,8 @@ const HorizontalGallery = ({ items }: { items: string[] }) => {
 
   useGSAP(
     () => {
+      if (!items.length) return;
+
       const slotWidth = IMAGE_SIZE + IMAGE_PADDING * 2;
       const startX = window.innerWidth;
       const endX = -Math.max(0, (items.length - 2) * slotWidth);
