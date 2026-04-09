@@ -9,6 +9,7 @@ export default function SubPocPage() {
   return (
     <LenisProvider>
       <HeroSection />
+      <GridContentSection />
       <CinematicCover sectionId="cinematic-cover-1" />
       <GridContentSection />
       <ParallaxCover

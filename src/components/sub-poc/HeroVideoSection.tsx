@@ -43,7 +43,7 @@ export default function HeroSection() {
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=2000", // 2000px of scroll = full video
+        end: "+=500", // 500px of scroll = full video
         pin: true,
         scrub: true,
         onUpdate: (self) => {
