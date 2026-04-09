@@ -10,6 +10,7 @@ export default function CinematicCover({
   sectionId: string;
 }) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
 
   useGSAP(
     () => {
@@ -33,6 +34,20 @@ export default function CinematicCover({
         `.${sectionId}-headline`,
         { y: 0, autoAlpha: 0 },
         { y: 0, autoAlpha: 1, ease: "none", duration: 1 },
+        0,
+      );
+
+      // Static vertical line: set top position based on actual headline bottom + mt-16
+      const sectionTop = sectionRef.current!.getBoundingClientRect().top;
+      const headlineBottom =
+        headlineRef.current!.getBoundingClientRect().bottom;
+      const lineTop = headlineBottom - sectionTop + 64; // 64px = mt-16
+      gsap.set(`.${sectionId}-line`, { top: lineTop });
+
+      tl.fromTo(
+        `.${sectionId}-line`,
+        { autoAlpha: 0 },
+        { autoAlpha: 1, ease: "none", duration: 1 },
         0,
       );
     },
@@ -63,6 +78,7 @@ export default function CinematicCover({
       {/* Headline — centered */}
       <div className="relative z-10 text-center px-16">
         <h2
+          ref={headlineRef}
           className={clsx(
             `${sectionId}-headline`,
             "text-[112px] font-light leading-none tracking-[-2.24px] text-white opacity-0",
@@ -75,6 +91,14 @@ export default function CinematicCover({
           processed
         </h2>
       </div>
+
+      {/* Vertical center line */}
+      <div
+        className={clsx(
+          `${sectionId}-line`,
+          "absolute left-1/2 -translate-x-1/2 bottom-2 w-px bg-white z-10 opacity-0",
+        )}
+      />
     </section>
   );
 }
