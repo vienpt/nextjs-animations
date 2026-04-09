@@ -22,6 +22,11 @@ const HorizontalGallery = ({ items = [] }: { items?: string[] }) => {
       const startX = window.innerWidth;
       const endX = -Math.max(0, (items.length - 2) * slotWidth);
 
+      gsap.set(containerRef.current, {
+        backgroundColor: "#00ffa3",
+        ease: "none",
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
