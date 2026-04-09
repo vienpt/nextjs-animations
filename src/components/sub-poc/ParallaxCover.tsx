@@ -112,12 +112,12 @@ export default function ParallaxCover({
   return (
     <section
       ref={sectionRef}
-      className="sticky top-0 h-screen mb-56 flex items-center justify-center bg-transparent z-0"
+      className="sticky top-0 h-screen mb-56 flex items-center justify-center bg-transparent z-0 px-16"
       id="parallax-cover"
     >
       {/* Top-right image */}
       {topRightImage && (
-        <div className="parallax-img-tr absolute top-1/2 -translate-y-1/2 right-0 w-52 h-52 overflow-hidden z-10">
+        <div className="parallax-img-tr absolute top-1/2 -translate-y-1/2 right-16 w-52 h-52 overflow-hidden z-10">
           <img
             src={topRightImage}
             className="w-full h-full object-cover"
@@ -126,7 +126,7 @@ export default function ParallaxCover({
         </div>
       )}
 
-      <div className="relative z-10 text-center px-16">
+      <div className="relative z-10 text-center">
         <h2
           ref={headlineRef}
           className="parallax-headline text-[112px] font-light leading-none tracking-[-2.24px] text-[#1a1a1a]"
@@ -137,7 +137,7 @@ export default function ParallaxCover({
 
       {/* Bottom-left image */}
       {bottomLeftImage && (
-        <div className="parallax-img-bl absolute bottom-0 left-0 w-52 h-52 overflow-hidden z-0">
+        <div className="parallax-img-bl absolute bottom-0 left-16 w-52 h-52 overflow-hidden z-0">
           <img
             src={bottomLeftImage}
             className="w-full h-full object-cover"

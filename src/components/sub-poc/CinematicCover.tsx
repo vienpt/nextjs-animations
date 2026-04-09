@@ -24,8 +24,8 @@ export default function CinematicCover({
 
       tl.fromTo(
         `.${sectionId}-image`,
-        { scale: 0.93 },
-        { scale: 1.1, ease: "none", duration: 1 },
+        { clipPath: "inset(64px)" }, // apply for respecting px-16 for each section
+        { clipPath: "inset(0px)", scale: 1.1, ease: "none", duration: 1 },
         0,
       );
 
