@@ -14,44 +14,69 @@ export default function CinematicCover({
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
+      const section = sectionRef.current!;
+      const headline = headlineRef.current!;
+      const imageSelector = `.${sectionId}-image`;
+      const headlineSelector = `.${sectionId}-headline`;
+      const lineSelector = `.${sectionId}-line`;
+
+      // ─── Vertical line: position from headline bottom + mt-16 to section bottom ──
+      const sectionTop = section.getBoundingClientRect().top;
+      const headlineBottom = headline.getBoundingClientRect().bottom;
+      gsap.set(lineSelector, { top: headlineBottom - sectionTop + 64 });
+
+      // ─── Phase 1 — Entry ─────────────────────────────────────────────────
+      // Starts when section is 40% from viewport bottom,
+      // completes when section reaches viewport top.
+      // Image expands from px-16 inset to full bleed,
+      // headline + line fade in simultaneously.
+      const entryTl = gsap.timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom 90%",
+          trigger: section,
+          start: "top 40%",
+          end: "top top",
           scrub: true,
         },
       });
 
-      tl.fromTo(
-        `.${sectionId}-image`,
-        { clipPath: "inset(64px)" }, // apply for respecting px-16 for each section
-        { clipPath: "inset(0px)", scale: 1.1, ease: "none", duration: 1 },
-        0,
-      );
+      entryTl
+        .fromTo(
+          imageSelector,
+          { clipPath: "inset(64px)" },
+          { clipPath: "inset(0px)", ease: "none", duration: 1 },
+          0,
+        )
+        .fromTo(
+          headlineSelector,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, ease: "none", duration: 1 },
+          0,
+        )
+        .fromTo(
+          lineSelector,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, ease: "none", duration: 1 },
+          0,
+        );
 
-      tl.fromTo(
-        `.${sectionId}-headline`,
-        { y: 0, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, ease: "none", duration: 1 },
-        0,
-      );
+      // ─── Phase 2 — Exit ──────────────────────────────────────────────────
+      // Image scales up from bottom edge as section scrolls out of viewport.
+      const exitTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
 
-      // Static vertical line: set top position based on actual headline bottom + mt-16
-      const sectionTop = sectionRef.current!.getBoundingClientRect().top;
-      const headlineBottom =
-        headlineRef.current!.getBoundingClientRect().bottom;
-      const lineTop = headlineBottom - sectionTop + 64; // 64px = mt-16
-      gsap.set(`.${sectionId}-line`, { top: lineTop });
-
-      tl.fromTo(
-        `.${sectionId}-line`,
-        { autoAlpha: 0 },
-        { autoAlpha: 1, ease: "none", duration: 1 },
-        0,
-      );
+      exitTl.to(`${imageSelector} img`, {
+        scale: 1.15,
+        transformOrigin: "center top",
+        ease: "none",
+        duration: 1,
+      });
     },
-
     { scope: sectionRef },
   );
 
@@ -75,7 +100,7 @@ export default function CinematicCover({
         />
       </div>
 
-      {/* Headline — centered */}
+      {/* Headline */}
       <div className="relative z-10 text-center px-16">
         <h2
           ref={headlineRef}
