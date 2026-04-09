@@ -1,86 +1,116 @@
-'use client';
-import { useRef } from 'react';
-import { useGSAP } from '@gsap/react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+"use client";
+import { useRef, useState, useCallback } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const NAV_ITEMS = ['Impact', 'Process', 'Stories', 'Disclosures'];
+const NAV_SECTIONS = [
+  { label: "Impact", sectionId: "cinematic-cover-1" },
+  { label: "Process", sectionId: "grid-content-section" },
+  { label: "Stories", sectionId: "parallax-cover" },
+  { label: "Disclosures", sectionId: "cinematic-cover-2" },
+];
 
 export default function SubNav() {
   const navRef = useRef<HTMLDivElement>(null);
-  const HEADER_HEIGHT = 97;
+  const underlineRef = useRef<HTMLDivElement>(null);
+  const linkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  // ─── Slide underline to the active link ───────────────────────────────
+  const showUnderline = useCallback((sectionId: string) => {
+    const link = linkRefs.current[sectionId];
+    const nav = navRef.current;
+    const underline = underlineRef.current;
+    if (!link || !nav || !underline) return;
+
+    const navLeft = nav.getBoundingClientRect().left;
+    const linkRect = link.getBoundingClientRect();
+
+    gsap.to(underline, {
+      x: linkRect.left - navLeft,
+      width: linkRect.width,
+      autoAlpha: 1,
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }, []);
+
+  const hideUnderline = useCallback(() => {
+    gsap.to(underlineRef.current, { autoAlpha: 0, duration: 0.3 });
+  }, []);
+
+  // ─── Activate a section (state + underline) ──────────────────────────
+  const activate = useCallback(
+    (sectionId: string) => {
+      setActiveId(sectionId);
+      showUnderline(sectionId);
+    },
+    [showUnderline],
+  );
+
+  const deactivate = useCallback(() => {
+    setActiveId(null);
+    hideUnderline();
+  }, [hideUnderline]);
 
   useGSAP(
     () => {
       const nav = navRef.current;
       if (!nav) return;
 
-      const navHeight = nav.offsetHeight;
-      const heroHeight = window.innerHeight;
+      // ─── Active section tracking ──────────────────────────────────────
+      NAV_SECTIONS.forEach(({ sectionId }, i) => {
+        const target = document.getElementById(sectionId);
+        if (!target) return;
 
-      // Initial position: fixed at bottom
-      gsap.set(nav, {
-        position: 'fixed',
-        bottom: 0,
-        top: 'auto',
-        y: 0,
-        zIndex: 40,
-      });
-
-      // Phase 1 — slide up while scrolling through hero (0% → 80%)
-      ScrollTrigger.create({
-        start: 0,
-        end: heroHeight * 0.8,
-        scrub: 0.3,
-        onUpdate: (self) => {
-          // travel distance = from bottom-0 to HEADER_HEIGHT from top
-          const totalTravel = heroHeight - navHeight - HEADER_HEIGHT;
-          gsap.set(nav, {
-            y: -(totalTravel * self.progress),
-          });
-        },
-      });
-
-      // Phase 2 — snap to sticky at 80% of hero
-      ScrollTrigger.create({
-        start: heroHeight * 0.8,
-        onEnter: () => {
-          gsap.set(nav, {
-            position: 'fixed',
-            top: HEADER_HEIGHT,
-            bottom: 'auto',
-            y: 0,
-          });
-        },
-        onLeaveBack: () => {
-          gsap.set(nav, {
-            position: 'fixed',
-            bottom: 0,
-            top: 'auto',
-          });
-        },
+        ScrollTrigger.create({
+          trigger: target,
+          start: "top 40%",
+          end: "bottom 40%",
+          onEnter: () => activate(sectionId),
+          onEnterBack: () => activate(sectionId),
+          ...(i === 0 && { onLeaveBack: deactivate }),
+        });
       });
     },
-    { scope: navRef }
+    { scope: navRef },
   );
 
   return (
-    <div ref={navRef} className="w-full bg-[#00FFA3] px-8 py-4 flex items-center justify-between">
+    <div
+      ref={navRef}
+      className="w-full bg-white px-16 py-6 flex items-center justify-between"
+    >
       <span className="font-bold text-black text-xl">Sustainability</span>
+
       <nav className="flex gap-8">
-        {NAV_ITEMS.map((item) => (
+        {NAV_SECTIONS.map(({ label, sectionId }) => (
           <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            className="text-black text-sm font-medium hover:opacity-70 transition-opacity"
+            key={sectionId}
+            ref={(el) => {
+              linkRefs.current[sectionId] = el;
+            }}
+            href={`#${sectionId}`}
+            className={`text-sm font-medium transition-opacity hover:opacity-70 ${
+              activeId === sectionId ? "text-black" : "text-black/60"
+            }`}
           >
-            {item}
+            {label}
           </a>
         ))}
       </nav>
-      <a href="/report" className="flex items-center gap-2 text-black text-sm font-semibold">
+
+      {/* Sliding underline — positioned under active link */}
+      <div
+        ref={underlineRef}
+        className="absolute bottom-0 left-0 h-0.5 bg-blue-600 opacity-0"
+      />
+
+      <a
+        href="/report"
+        className="flex items-center gap-2 text-black text-sm font-semibold"
+      >
         Download Report
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path

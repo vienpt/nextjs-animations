@@ -4,12 +4,14 @@ import ParallaxCover from "@/components/sub-poc/ParallaxCover";
 import HorizontalGallery from "@/components/sub-poc/HorizontalGallery";
 import LenisProvider from "@/hocs/LenisProvider";
 import HeroSection from "@/components/sub-poc/HeroVideoSection";
+import MainNav from "@/components/sub-poc/MainNav";
 
 export default function SubPocPage() {
   return (
     <LenisProvider>
+      <MainNav />
       <HeroSection />
-      <GridContentSection />
+
       <CinematicCover sectionId="cinematic-cover-1" />
       <GridContentSection />
       <ParallaxCover

@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollIndicator from "./ScrollIndicator";
+import SubNav from "./SubNav";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,35 +61,41 @@ export default function HeroSection() {
   );
 
   return (
-    <div
-      ref={sectionRef}
-      className="relative h-screen overflow-hidden bg-[#070e1d]"
-    >
-      <video
-        ref={videoRef}
-        src="https://www.w3schools.com/html/mov_bbb.mp4"
-        className="absolute inset-0 w-full h-full object-cover"
-        muted
-        playsInline
-        preload="auto"
-      />
-      <div className="relative z-10 flex items-start pt-50 pl-[274px] gap-6">
-        {/* Teal vertical accent line */}
-        <div className="w-0.5 h-40 bg-[#00FFA3]" />
-        <div>
-          <h1 className="text-white text-[112px] font-light leading-none tracking-[-2.24px]">
-            Delivering sustainability.
-            <br />
-            Driving growth.
-          </h1>
-          <p className="text-white/80 text-[20px] leading-[1.36] tracking-[-0.2px] mt-10 max-w-2xl">
-            Darling Ingredients experienced a year of strong momentum in
-            sustainability performance. We continued to advance our goals,
-            demonstrating sustainability is core to who we are and what we do.
-          </p>
+    <>
+      <section
+        ref={sectionRef}
+        className="relative h-screen overflow-hidden bg-[#070e1d]"
+      >
+        <video
+          ref={videoRef}
+          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          className="absolute inset-0 w-full h-full object-cover"
+          muted
+          playsInline
+          preload="auto"
+        />
+        <div className="relative z-10 flex items-start pt-50 pl-[274px] gap-6">
+          {/* Teal vertical accent line */}
+          <div className="w-0.5 h-40 bg-[#00FFA3]" />
+          <div>
+            <h1 className="text-white text-[112px] font-light leading-none tracking-[-2.24px]">
+              Delivering sustainability.
+              <br />
+              Driving growth.
+            </h1>
+            <p className="text-white/80 text-[20px] leading-[1.36] tracking-[-0.2px] mt-10 max-w-2xl">
+              Darling Ingredients experienced a year of strong momentum in
+              sustainability performance. We continued to advance our goals,
+              demonstrating sustainability is core to who we are and what we do.
+            </p>
+          </div>
         </div>
+        <ScrollIndicator />
+      </section>
+      {/* SubNav: negative margin pulls it up to overlap hero bottom, sticky keeps it at top */}
+      <div className="sticky top-0 z-50">
+        <SubNav />
       </div>
-      <ScrollIndicator />
-    </div>
+    </>
   );
 }
